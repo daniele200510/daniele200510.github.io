@@ -1,23 +1,1002 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Automation</title>
+  <title>A.P. S.A.S. — Associazione Parrucchieri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; color: #222; }
-    h1 { font-size: 2rem; }
-    a { color: #0a7cff; }
+    :root {
+      --ivory-50: #FBF8F2;
+      --ivory-100: #F7F3EC;
+      --ivory-200: #EFE8DB;
+      --ivory-300: #E3D9C6;
+      --charcoal-700: #2E2924;
+      --charcoal-800: #221F1B;
+      --charcoal-900: #1A1613;
+      --ink: #0E0B09;
+      --gold-300: #E0C68A;
+      --gold-500: #C9A668;
+      --gold-700: #A07D42;
+      --display: 'Instrument Serif', serif;
+      --sans: 'Inter Tight', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--ivory-100);
+      color: var(--charcoal-900);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.55;
+    }
+
+    /* ── Intro animation ── */
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--charcoal-900);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.9s;
+    }
+
+    #intro.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro-logotype {
+      font-family: var(--display);
+      font-size: clamp(5rem, 15vw, 10rem);
+      color: var(--ivory-50);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      overflow: hidden;
+    }
+
+    .intro-logotype span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: rise 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .intro-logotype span:nth-child(1) { animation-delay: 0.1s; }
+    .intro-logotype span:nth-child(2) { animation-delay: 0.2s; color: var(--gold-500); }
+
+    .intro-tagline {
+      margin-top: 1.25rem;
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ivory-300);
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards 0.8s;
+    }
+
+    .intro-line {
+      width: 0;
+      height: 1px;
+      background: var(--gold-500);
+      margin-top: 2rem;
+      animation: expand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;
+    }
+
+    @keyframes rise {
+      to { transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes expand {
+      to { width: 80px; }
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+
+    nav.scrolled {
+      background: rgba(247, 243, 236, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201, 166, 104, 0.15);
+    }
+
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 1.35rem;
+      color: var(--charcoal-900);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-logo em {
+      color: var(--gold-500);
+      font-style: normal;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-700);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold-500); }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 0 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 8rem;
+      padding-bottom: 4rem;
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeSlideUp 0.8s ease forwards 1.4s;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold-500);
+    }
+
+    .hero-eyebrow span {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+    }
+
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--charcoal-900);
+      opacity: 0;
+      animation: fadeSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.6s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-500);
+    }
+
+    .hero-subtitle {
+      margin-top: 2rem;
+      font-size: 1.0625rem;
+      font-weight: 300;
+      color: var(--charcoal-700);
+      max-width: 520px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeSlideUp 0.8s ease forwards 1.9s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 3rem;
+      opacity: 0;
+      animation: fadeSlideUp 0.8s ease forwards 2.1s;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: var(--charcoal-900);
+      color: var(--ivory-50);
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.25s;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-500);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      border: 1px solid var(--charcoal-900);
+      color: var(--charcoal-900);
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.25s, color 0.25s, transform 0.25s;
+    }
+
+    .btn-ghost:hover {
+      background: var(--charcoal-900);
+      color: var(--ivory-50);
+      transform: translateY(-1px);
+    }
+
+    .hero-scroll-hint {
+      padding: 2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 2.4s;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: var(--gold-500);
+      animation: scrollPulse 2s ease-in-out infinite 2.5s;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .hero-scroll-hint span {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+      writing-mode: vertical-rl;
+    }
+
+    /* ── Decorative number ── */
+    .hero-number {
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--display);
+      font-size: clamp(10rem, 22vw, 20rem);
+      color: rgba(201, 166, 104, 0.06);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Section layout ── */
+    section {
+      padding: 7rem 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--gold-500);
+    }
+
+    .section-eyebrow span {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--charcoal-900);
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--gold-500);
+    }
+
+    /* ── About ── */
+    #about {
+      border-top: 1px solid var(--ivory-300);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      font-size: 1.0625rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--charcoal-700);
+      margin-bottom: 1.25rem;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-pull {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--charcoal-900);
+      border-left: 2px solid var(--gold-500);
+      padding-left: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .about-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .meta-card {
+      background: var(--ivory-200);
+      padding: 1.5rem;
+      border-bottom: 2px solid var(--gold-500);
+    }
+
+    .meta-card .num {
+      font-family: var(--display);
+      font-size: 2.5rem;
+      color: var(--charcoal-900);
+      line-height: 1;
+    }
+
+    .meta-card .label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+      margin-top: 0.25rem;
+    }
+
+    .about-visual {
+      position: relative;
+    }
+
+    .about-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--charcoal-800);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,166,104,0.08) 0%, transparent 60%);
+    }
+
+    .frame-label {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      background: rgba(247, 243, 236, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .frame-label .name {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      color: var(--charcoal-900);
+    }
+
+    .frame-label .since {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+    }
+
+    .frame-ornament {
+      position: absolute;
+      top: -1.5rem;
+      right: -1.5rem;
+      width: 100px;
+      height: 100px;
+      border: 1px solid var(--gold-500);
+      opacity: 0.3;
+    }
+
+    /* ── Services ── */
+    #services {
+      background: var(--charcoal-900);
+      max-width: 100%;
+      padding: 7rem 2.5rem;
+    }
+
+    .services-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #services .section-title { color: var(--ivory-50); }
+    #services .section-eyebrow::before { background: var(--gold-500); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(201, 166, 104, 0.12);
+      margin-top: 4rem;
+      border: 1px solid rgba(201, 166, 104, 0.12);
+    }
+
+    .service-card {
+      background: var(--charcoal-900);
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: background 0.3s;
+      cursor: default;
+    }
+
+    .service-card:hover {
+      background: var(--charcoal-800);
+    }
+
+    .service-card:hover .service-number {
+      color: var(--gold-500);
+    }
+
+    .service-number {
+      font-family: var(--display);
+      font-size: 3rem;
+      color: rgba(201, 166, 104, 0.15);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .service-name {
+      font-family: var(--display);
+      font-size: 1.35rem;
+      color: var(--ivory-100);
+      margin-bottom: 0.75rem;
+    }
+
+    .service-desc {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--ivory-300);
+    }
+
+    .service-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold-500);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .service-card:hover .service-line { width: 100%; }
+
+    /* ── Philosophy ── */
+    #philosophy {
+      text-align: center;
+      border-top: 1px solid var(--ivory-300);
+    }
+
+    .philosophy-quote {
+      font-family: var(--display);
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--charcoal-900);
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+
+    .philosophy-quote em { color: var(--gold-500); }
+
+    .philosophy-author {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+    }
+
+    .philosophy-divider {
+      width: 1px;
+      height: 60px;
+      background: var(--gold-500);
+      margin: 3rem auto;
+      opacity: 0.5;
+    }
+
+    /* ── Contatti ── */
+    #contact {
+      border-top: 1px solid var(--ivory-300);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .contact-intro {
+      font-size: 1.0625rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--charcoal-700);
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--ivory-200);
+    }
+
+    .contact-detail:first-child { border-top: 1px solid var(--ivory-200); }
+
+    .detail-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-700);
+      min-width: 5rem;
+      padding-top: 0.1rem;
+    }
+
+    .detail-value {
+      font-size: 0.9375rem;
+      color: var(--charcoal-900);
+      line-height: 1.5;
+    }
+
+    .detail-value a {
+      color: var(--charcoal-900);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .detail-value a:hover {
+      color: var(--gold-700);
+      border-color: var(--gold-700);
+    }
+
+    .contact-map-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--ivory-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      border: 1px solid var(--ivory-300);
+    }
+
+    .map-icon {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--gold-500);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      position: relative;
+    }
+
+    .map-icon::after {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      background: var(--gold-500);
+      border-radius: 50%;
+    }
+
+    .map-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal-700);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--ink);
+      padding: 3rem 2.5rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-family: var(--display);
+      font-size: 1.15rem;
+      color: var(--ivory-100);
+      letter-spacing: -0.01em;
+    }
+
+    .footer-logo em {
+      color: var(--gold-500);
+      font-style: normal;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ivory-300);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gold-500); }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: rgba(227, 217, 198, 0.35);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.25rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+
+      #hero { padding: 0 1.5rem; }
+      .hero-number { display: none; }
+
+      section { padding: 5rem 1.5rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-visual { order: -1; }
+      .about-frame { aspect-ratio: 4/3; }
+
+      .services-grid { grid-template-columns: 1fr; }
+
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-title { font-size: 2.8rem; }
+      .hero-cta { flex-direction: column; }
+      .about-meta { grid-template-columns: 1fr; }
+      #services { padding: 5rem 1.5rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>Social Automation</h1>
-  <p>We help businesses automatically process and publish video content to TikTok and Instagram via WhatsApp.</p>
-  <p>Send us a video on WhatsApp, and we handle the editing, subtitles, branding, and posting — automatically.</p>
-  <ul>
-    <li><a href="/privacy.html">Privacy Policy</a></li>
-    <li><a href="/terms.html">Terms of Service</a></li>
-  </ul>
-  <p>Contact: <a href="mailto:daniele.colautti05@gmail.com">daniele.colautti05@gmail.com</a></p>
+
+  <!-- ── Intro ── -->
+  <div id="intro">
+    <div class="intro-logotype">
+      <span>a</span><span>.</span><span style="animation-delay:0.15s">p</span><span style="animation-delay:0.25s;color:var(--ivory-50)">.</span>
+    </div>
+    <div class="intro-tagline">Associazione Parrucchieri</div>
+    <div class="intro-line"></div>
+  </div>
+
+  <!-- ── Navigation ── -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">a.<em>p</em>. s.a.s.</a>
+    <ul class="nav-links">
+      <li><a href="#about">Chi siamo</a></li>
+      <li><a href="#services">Servizi</a></li>
+      <li><a href="#philosophy">Filosofia</a></li>
+      <li><a href="#contact">Contatti</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span>Dal 1995 — Udine</span>
+      </div>
+      <h1 class="hero-title">
+        L'arte<br>
+        del <em>capello</em><br>
+        perfetto.
+      </h1>
+      <p class="hero-subtitle">
+        Cura, precisione e personalità. Ogni cliente è unico — ogni taglio, una firma.
+      </p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn-primary">Prenota ora</a>
+        <a href="#services" class="btn-ghost">I nostri servizi</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scopri</span>
+    </div>
+    <div class="hero-number" aria-hidden="true">95</div>
+  </section>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <div class="section-header">
+      <div class="section-eyebrow"><span>Chi siamo</span></div>
+      <h2 class="section-title">Passione <em>italiana</em><br>per la bellezza.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          A.P. S.A.S. nasce dall'amore profondo per l'artigianato e per la relazione umana. Ogni giorno apriamo le porte del salone con un solo obiettivo: far sentire ogni persona al meglio di sé.
+        </p>
+        <div class="about-pull">
+          "Il capello è la prima cosa che il mondo vede — e l'ultima che si dimentica."
+        </div>
+        <p>
+          Con oltre trent'anni di esperienza, il nostro team unisce tecnica rigorosa e sensibilità estetica. Seguiamo le tendenze internazionali senza perdere l'identità artigianale che ci distingue.
+        </p>
+        <div class="about-meta">
+          <div class="meta-card">
+            <div class="num">30+</div>
+            <div class="label">Anni di esperienza</div>
+          </div>
+          <div class="meta-card">
+            <div class="num">1k+</div>
+            <div class="label">Clienti fidelizzati</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-frame">
+          <div class="frame-ornament"></div>
+          <div class="frame-label">
+            <span class="name">A.P. S.A.S.</span>
+            <span class="since">Est. 1995</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ── -->
+  <section id="services">
+    <div class="services-inner">
+      <div class="section-header">
+        <div class="section-eyebrow"><span>Servizi</span></div>
+        <h2 class="section-title" style="color:var(--ivory-50)">Ogni <em>servizio</em>,<br>un'esperienza.</h2>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-number">01</div>
+          <div class="service-name">Taglio & Styling</div>
+          <div class="service-desc">Tagli su misura per capelli donna e uomo. Consulenza personalizzata per valorizzare i tratti e la personalità di ciascun cliente.</div>
+          <div class="service-line"></div>
+        </div>
+        <div class="service-card">
+          <div class="service-number">02</div>
+          <div class="service-name">Colorazione</div>
+          <div class="service-desc">Tecniche di colore avanzate: balayage, highlights, colore pieno, correzioni cromatiche. Prodotti selezionati per luminosità e durata.</div>
+          <div class="service-line"></div>
+        </div>
+        <div class="service-card">
+          <div class="service-number">03</div>
+          <div class="service-name">Trattamenti</div>
+          <div class="service-desc">Trattamenti idratanti, ristrutturanti e liscianti. Cure professionali per la salute del capello a partire dalla radice.</div>
+          <div class="service-line"></div>
+        </div>
+        <div class="service-card">
+          <div class="service-number">04</div>
+          <div class="service-name">Acconciature</div>
+          <div class="service-desc">Raccolti eleganti, onde morbide, styling per cerimonie. Ogni occasione merita un'acconciatura all'altezza.</div>
+          <div class="service-line"></div>
+        </div>
+        <div class="service-card">
+          <div class="service-number">05</div>
+          <div class="service-name">Permanente & Lisciatura</div>
+          <div class="service-desc">Permanenti morbide e definite, lisciature brasiliane e cheratina. Trasforma la texture naturale con risultati duraturi.</div>
+          <div class="service-line"></div>
+        </div>
+        <div class="service-card">
+          <div class="service-number">06</div>
+          <div class="service-name">Consulenza Immagine</div>
+          <div class="service-desc">Un momento dedicato esclusivamente a te: forma del viso, incarnato, stile di vita. Definiamo insieme la tua identità estetica.</div>
+          <div class="service-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Philosophy ── -->
+  <section id="philosophy">
+    <div class="philosophy-divider"></div>
+    <blockquote class="philosophy-quote">
+      "La vera eleganza è <em>rifiutare ciò che è di moda</em> per abbracciare ciò che ci appartiene."
+    </blockquote>
+    <div class="philosophy-author">— Filosofia A.P. S.A.S.</div>
+    <div class="philosophy-divider"></div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <div class="section-header">
+      <div class="section-eyebrow"><span>Contatti</span></div>
+      <h2 class="section-title">Vieni <em>a trovarci.</em></h2>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro">
+          Siamo a disposizione per prenotazioni, informazioni sui servizi e consulenze. Il tuo appuntamento inizia qui.
+        </p>
+        <a href="#" class="btn-primary" style="margin-bottom:2.5rem;display:inline-flex">Prenota il tuo appuntamento</a>
+
+        <div class="contact-detail">
+          <span class="detail-label">Telefono</span>
+          <span class="detail-value"><a href="tel:+390000000000">+39 000 000 0000</a></span>
+        </div>
+        <div class="contact-detail">
+          <span class="detail-label">Email</span>
+          <span class="detail-value"><a href="mailto:info@apsas.it">info@apsas.it</a></span>
+        </div>
+        <div class="contact-detail">
+          <span class="detail-label">Orari</span>
+          <span class="detail-value">Mar–Sab: 9:00 – 19:00<br>Lun: chiuso</span>
+        </div>
+        <div class="contact-detail">
+          <span class="detail-label">Indirizzo</span>
+          <span class="detail-value">Udine (UD), Italia</span>
+        </div>
+      </div>
+      <div>
+        <div class="contact-map-placeholder">
+          <div class="map-icon"></div>
+          <span class="map-label">Udine, Italia</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">a.<em>p</em>. s.a.s.</div>
+      <ul class="footer-links">
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Termini di Servizio</a></li>
+      </ul>
+      <div class="footer-copy">&copy; 2025 A.P. S.A.S. — Tutti i diritti riservati</div>
+    </div>
+  </footer>
+
+  <script>
+    // Dismiss intro after animation completes
+    setTimeout(() => {
+      document.getElementById('intro').classList.add('hidden');
+    }, 2800);
+
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+  </script>
 </body>
 </html>
